@@ -490,11 +490,6 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-easy-typer-js@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmmirror.com/easy-typer-js/-/easy-typer-js-2.1.0.tgz#10ba052dd8c9b9ffe580e6ab45b5da6c25aba2cc"
-  integrity sha512-P1G1oPO26lPfuPdaS3KyywFc36HRVKBJvzxJiOMbn5+Z3n9JLzhTT4cJK121mnjujyOWQiRla4ikHZQHPcoa/g==
-
 emoji-regex@^9.2.2:
   version "9.2.2"
   resolved "https://registry.npmmirror.com/emoji-regex/-/emoji-regex-9.2.2.tgz#840c8803b0d8047f4ff0cf963176b32d4ef3ed72"
