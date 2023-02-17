@@ -1,73 +1,80 @@
-import Head from 'next/head'
-import styles from '@/styles/Home.module.css'
-import Typed from 'typed.js'
-import React, { useRef, useState } from 'react'
-
+import Head from "next/head";
+import styles from "@/styles/Home.module.css";
+import Typed from "typed.js";
+import React, { useRef, useState } from "react";
+import Image from "next/image";
 
 export default function Home() {
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [responseTexts, setResponseTexts] = useState([]);
 
   const [isInputVisible, setIsInputVisible] = useState(false);
 
-  const typedRef = useRef(null)
+  const typedRef = useRef(null);
 
   const newDivRef = useRef(null);
 
   const textareaRef = useRef(null);
 
-
   function handleClick() {
-
     const value = textareaRef.current.value;
 
     if (!value) {
-      alert('请输入内容')
-      return false
+      alert("请输入内容");
+      return false;
     }
 
     setIsLoading(true);
-    setIsInputVisible(true)
+    setIsInputVisible(true);
 
-    fetch('http://spdhapi.cyshkj.cn/test?text=' + value)
-      .then(response => response.json())
-      .then(res => {
+    fetch("http://myai.com/api/aisearch/main/temp?content=" + value)
+      .then((response) => response.json())
+      .then((res) => {
         // 处理接口返回的数据
-        console.log(res.data)
+        // console.log(res.data);
         // 显示打印的div
-        const typed = new Typed(typedRef.current, {
-          strings: [res.data],
-          typeSpeed: 10,
-          showCursor: false,
-          backDelay: 100,
-          onComplete: () => {
-            // 关闭打印文本
-            setIsInputVisible(false)
-            // 按钮可点击
-            setIsLoading(false);
-
-            // 显示文本在div内
-            setResponseTexts(prevResponseTexts => [res.data, ...prevResponseTexts])
-
-            // 清空输入框
-            // textareaRef.current.value = '';
-
-            // 销毁这个对象
-            typed.destroy()
-
-
-            // 页面上显示调用次数-1
-
-
-          },
-        });
+        if (res.data) {
+          doTyped(res.data);
+        } else {
+          doTyped(res.msg);
+        }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
         setIsLoading(false);
       });
+      
+  }
+
+  function doTyped(content) {
+    console.log(content)
+    const typed = new Typed(typedRef.current, {
+      strings: [content],
+      typeSpeed: 10,
+      showCursor: false,
+      backDelay: 100,
+      onComplete: () => {
+        // 关闭打印文本
+        setIsInputVisible(false);
+        // 按钮可点击
+        setIsLoading(false);
+
+        // 显示文本在div内
+        setResponseTexts((prevResponseTexts) => [
+          content,
+          ...prevResponseTexts,
+        ]);
+
+        // 清空输入框
+        textareaRef.current.value = "";
+
+        // 销毁这个对象
+        typed.destroy();
+
+        // 页面上显示调用次数-1
+      },
+    });
   }
 
   return (
@@ -79,32 +86,45 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-
         {/* 顶部介绍 */}
-        <div className={styles.header}>
-          Hello,World!
-        </div>
+        <div className={styles.header}>欢迎使用</div>
         {/* 问答区域 */}
         <div className={styles.c_input_box}>
-          <textarea ref={textareaRef} className={styles.c_input} rows={4} placeholder='在这里输入你的问题吧~' />
-        </div>
-        <div className={styles.btn_box}>
-          <button className={styles.btn} onClick={handleClick} disabled={isLoading} >{isLoading ? '加载中...' : '获取数据'}</button>
+          <textarea
+            ref={textareaRef}
+            className={styles.c_input}
+            readOnly={isLoading}
+            rows={4}
+            placeholder="在这里输入你的问题吧~"
+          />
+          {isLoading ? (
+            <div className={[styles.loader, styles.btn_box].join(" ")}></div>
+          ) : (
+            <Image
+              className={styles.btn_box}
+              src={require("../public/send.png")}
+              width={30}
+              onClick={handleClick}
+              height={30}
+              alt=""
+            />
+          )}
         </div>
         {/* 结果区域 */}
         <div className={styles.answer_box} ref={newDivRef}>
-
-          {isInputVisible && <div ref={typedRef} className={styles.answer}></div>}
+          {isInputVisible && (
+            <div ref={typedRef} className={styles.answer}></div>
+          )}
 
           {responseTexts.map((responseText, index) => (
-            <div key={index} className={styles.answer}>{responseText}</div>
+            <div key={index} className={styles.answer}>
+              {responseText}
+            </div>
           ))}
-
         </div>
-
+        <div className={styles.footer}>付费使用</div>
         {/* 尾部 */}
       </main>
-
     </>
   );
 }
