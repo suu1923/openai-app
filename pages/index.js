@@ -28,7 +28,7 @@ export default function Home() {
     setIsLoading(true);
     setIsInputVisible(true);
 
-    fetch("http://myai.com/api/aisearch/main/temp?content=" + value)
+    fetch("https://ai.suuweb.cn/api/aisearch/main/temp?content=" + value)
       .then((response) => response.json())
       .then((res) => {
         // 处理接口返回的数据
